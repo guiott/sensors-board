@@ -1,7 +1,7 @@
 /* ////////////////////////////////////////////////////////////////////////////
 ** File:      SensorBoard.pde
 */                                  
- unsigned char  Ver[] = "SensorBoard 1.3.0 Guiott 02-10"; // 30+1 char
+ unsigned char  Ver[] = "SensorBoard 1.3.1 Guiott 08-10"; // 30+1 char
 /* Author:    Guido Ottaviani-->guido@guiott.com<--
 ** Description: This SW drives the Arduino board on reading some sensors in 
 **		order to know the external environment and to instruct dsNavCon 
@@ -73,8 +73,8 @@ byte SensorStatus = 0;           // SensorRead function status
 byte Light[] = {0, 0, 0};        // Light values array
 byte Gas[] = {0, 0, 0};          // Gas values array
 byte Sound[] = {0, 0, 0};        // To be implemented
-int SensDist[3][2];              // Distance matrix: position x type of sensor
-byte Dist[3];                    // Actual distance from object
+int SensDist[3][2] = {200,200,200,200,200,200};// Distance matrix: position x type of sensor
+byte Dist[3] = {250, 250, 250};  // Current distance from object
 byte Vbatt;
 #define VBATT_THRESHOLD 102      // Battery alert when Vbatt < 11V
 int CmpBearing;	                 // Compass reading
@@ -82,12 +82,13 @@ int CmpBearing0; 		 // orientetion at startup, got as a reference
 #define BOT_RADIUS  10 // cm to add to sensors measures to obtain distance from center of the bot
 #define MIN_DIST BOT_RADIUS + 5  // alert distance from obstacle
 
-Metro BlinkCycle = Metro(BLINK_OFF);  // LED blink cycle
-Metro SensorCycle = Metro(14);        // Sensor reading cycle [2]
-Metro SwitchCycle = Metro(100);       // Push button cycle
+Metro BlinkCycle = Metro(BLINK_OFF,1);  // LED blink cycle
+Metro SensorCycle = Metro(14,1);        // Sensor reading cycle [2]
+Metro SwitchCycle = Metro(100,1);       // Push button cycle
 
 // #define DEBUG_MODE
 byte SendFlag= LOW;            // to enable data sending
+int TimeElapsed = millis();
 
 //-----------------------------------------------------------------------------      
 
@@ -111,7 +112,7 @@ void setup()
   Bump[C] = 5;                 // Central Bumper
   Bump[R] = 4;                 // Right Bumper
 
-  CmpInit();                    // set reference orientation
+  CmpInit();                   // set reference orientation
   SrfSetup();                  // SRF08 initializing
   LedTest();
 }

@@ -172,7 +172,7 @@ void SensorRead()
   default:
     break;
   }
-  
+ 
   for (i = L; i <= R; i++)  // [4]
   {
     if (digitalRead(Bump[i]))
@@ -189,7 +189,7 @@ void SensorRead()
       NoObstacle();
     }
   }
-  
+ 
   SensorStatus ++;      // cycle among 8 states
   if (SensorStatus > 7)
   {
@@ -236,7 +236,10 @@ void DataPrint(void)
   Serial.print((int)Vbatt);
   Serial.print("-Cmp:");
   Serial.println((int)CmpBearing);
-  Serial.println("");
+  Serial.print("time: ");
+  Serial.println((millis() - TimeElapsed));
+  TimeElapsed = millis();
+  Serial.println(" ");
   
 }
 #else
