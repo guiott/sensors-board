@@ -56,6 +56,7 @@ int SwCount = 0;                 // push button counter
 #define I2C_US_R 0x72            // SRF Ultra Sound right I2C address
 #define I2C_DAC 0x28             // MAX127 AD expander I2C address
 #define I2C_CMP 0x60             // CMPS03 compass sensor I2C address
+#define I2C_SOUND 0x50           // PSoC Sound board I2C address
 
 #define I2cCmpCalReg 15
 #define I2cCmpCalValue 0xFF
