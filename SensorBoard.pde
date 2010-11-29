@@ -87,9 +87,14 @@ Metro BlinkCycle = Metro(BLINK_OFF,1);  // LED blink cycle
 Metro SensorCycle = Metro(14,1);        // Sensor reading cycle [2]
 Metro SwitchCycle = Metro(100,1);       // Push button cycle
 
-// #define DEBUG_MODE
+#define DEBUG_MODE
 byte SendFlag= LOW;            // to enable data sending
 int TimeElapsed = millis();
+
+struct I2C_Sound_Struct {   // I2C interface structure  
+    long I2C_SoundValue[3];    
+} I2C_Regs;  
+
 
 //-----------------------------------------------------------------------------      
 
