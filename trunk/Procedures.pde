@@ -114,6 +114,8 @@ void SensorRead()
     Wire.send(DAC_EYE_C);           // set CH2
     Wire.endTransmission();
     // ---- center IR
+    
+    I2c_sound_read((byte *) &I2C_Regs); // read sound values
     break;
 
   case 4:
@@ -201,7 +203,7 @@ void SensorRead()
 #ifdef DEBUG_MODE
 void DataPrint(void)
 {// send read data on serial port as debug
-  Serial.print("US L:");
+  Serial.print("US    L:");
   Serial.print(SensDist[L][US]);
   Serial.print(" ");
   Serial.print("-C:");
@@ -211,7 +213,7 @@ void DataPrint(void)
   Serial.print(SensDist[R][US]);
   Serial.println("");
   
-  Serial.print("IR L:");
+  Serial.print("IR    L:");
   Serial.print(SensDist[L][IR]);
   Serial.print(" ");
   Serial.print("-C:");
@@ -236,7 +238,13 @@ void DataPrint(void)
   Serial.print((int)Vbatt);
   Serial.print("-Cmp:");
   Serial.println((int)CmpBearing);
-  Serial.print("time: ");
+  Serial.print("Sound L:");
+  Serial.print((long)I2C_Regs.I2C_SoundValue[0]);    
+  Serial.print(" -C:");
+  Serial.print((long)I2C_Regs.I2C_SoundValue[1]);  
+  Serial.print(" -R:");
+  Serial.print((long)I2C_Regs.I2C_SoundValue[2]);  
+  Serial.print("  time: ");
   Serial.println((millis() - TimeElapsed));
   TimeElapsed = millis();
   Serial.println(" ");
