@@ -88,6 +88,9 @@ void SensorRead()
     Wire.send(DAC_EYE_L);           // set CH3
     Wire.endTransmission();
     // ---- Left IR
+    
+    I2c_sound_WD(); // pat the PSoC watchdog 
+    
     break;
 
   case 2:
