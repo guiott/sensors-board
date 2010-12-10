@@ -30,6 +30,10 @@ guido@guiott.com
     along with SensorBoard.pde.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------      
 /////////////////////////////////////////////////////////////////////////////*/
+// Compiler options
+#define DEBUG_MODE // If defined the serial output is in ASCII for debug
+#define SOUND_DB   // if defined the values from Sound Board are in dB
+
 
 #include <Wire.h>
 #include <Metro.h>
@@ -87,14 +91,18 @@ Metro BlinkCycle = Metro(BLINK_OFF,1);  // LED blink cycle
 Metro SensorCycle = Metro(14,1);        // Sensor reading cycle [2]
 Metro SwitchCycle = Metro(100,1);       // Push button cycle
 
-#define DEBUG_MODE
 byte SendFlag= LOW;            // to enable data sending
 int TimeElapsed = millis();
 
-struct I2C_Sound_Struct {   // I2C interface structure  
-    long I2C_SoundValue[3];    
-} I2C_Regs;  
-
+#ifdef SOUND_DB
+  struct I2C_Sound_Struct {   // I2C interface structure  
+      long I2C_SoundValue[3];    
+  } I2C_Regs;  
+#else
+  struct I2C_Sound_Struct {   // I2C interface structure  
+      byte I2C_SoundValue[3];    
+  } I2C_Regs; 
+#endif
 
 //-----------------------------------------------------------------------------      
 
