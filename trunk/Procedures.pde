@@ -241,12 +241,21 @@ void DataPrint(void)
   Serial.print((int)Vbatt);
   Serial.print("-Cmp:");
   Serial.println((int)CmpBearing);
-  Serial.print("Sound L:");
-  Serial.print((long)I2C_Regs.I2C_SoundValue[0]);    
-  Serial.print(" -C:");
-  Serial.print((long)I2C_Regs.I2C_SoundValue[1]);  
-  Serial.print(" -R:");
-  Serial.print((long)I2C_Regs.I2C_SoundValue[2]);  
+  #ifdef SOUND_DB
+    Serial.print("Sound (dB) L:");
+    Serial.print((unsigned int)I2C_Regs.I2C_SoundValue[0]);    
+    Serial.print(" -C:");
+    Serial.print((unsigned int)I2C_Regs.I2C_SoundValue[1]);  
+    Serial.print(" -R:");
+    Serial.print((unsigned int)I2C_Regs.I2C_SoundValue[2]);  
+  #else
+    Serial.print("Sound L:");
+    Serial.print((long)I2C_Regs.I2C_SoundValue[0]);    
+    Serial.print(" -C:");
+    Serial.print((long)I2C_Regs.I2C_SoundValue[1]);  
+    Serial.print(" -R:");
+    Serial.print((long)I2C_Regs.I2C_SoundValue[2]);  
+  #endif
   Serial.print("  time: ");
   Serial.println((millis() - TimeElapsed));
   TimeElapsed = millis();

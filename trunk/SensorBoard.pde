@@ -1,7 +1,7 @@
 /* ////////////////////////////////////////////////////////////////////////////
 ** File:      SensorBoard.pde
 */                                  
- unsigned char  Ver[] = "SensorBoard 1.3.1 Guiott 08-10"; // 30+1 char
+ unsigned char  Ver[] = "SensorBoard 1.3.5 Guiott 12-10"; // 30+1 char
 /* Author:    Guido Ottaviani-->guido@guiott.com<--
 ** Description: This SW drives the Arduino board on reading some sensors in 
 **		order to know the external environment and to instruct dsNavCon 
@@ -31,7 +31,7 @@ guido@guiott.com
 -------------------------------------------------------------------------------      
 /////////////////////////////////////////////////////////////////////////////*/
 // Compiler options
-#define DEBUG_MODE // If defined the serial output is in ASCII for debug
+// #define DEBUG_MODE // If defined the serial output is in ASCII for debug
 #define SOUND_DB   // if defined the values from Sound Board are in dB
 
 
@@ -96,11 +96,11 @@ int TimeElapsed = millis();
 
 #ifdef SOUND_DB
   struct I2C_Sound_Struct {   // I2C interface structure  
-      long I2C_SoundValue[3];    
-  } I2C_Regs;  
-#else
-  struct I2C_Sound_Struct {   // I2C interface structure  
       byte I2C_SoundValue[3];    
+  } I2C_Regs;
+#else
+   struct I2C_Sound_Struct {   // I2C interface structure  
+      long I2C_SoundValue[3];    
   } I2C_Regs; 
 #endif
 
