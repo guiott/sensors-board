@@ -2,25 +2,25 @@
  {
     #ifdef SOUND_DB   
       Wire.beginTransmission(I2C_SOUND);
-      Wire.send((int)(0));
+      Wire.send((int)(13));         // read register 13-14-15
       Wire.endTransmission();
-      Wire.requestFrom(I2C_SOUND,12); // read 3 long variables = 12 bytes
+      Wire.requestFrom(I2C_SOUND,3); // read 3 "byte" variables
       int c = 0;
-      // data on PSoC registers are Big Endian, AVR works in Little Endian
-      for ( c = 11; c >= 0; c-- ) 
+      for ( c = 0; c < 3; c++ ) 
       {
         if (Wire.available()) 
         {
           buffer[c] = Wire.receive();
         }
-      }
+      }    
     #else
       Wire.beginTransmission(I2C_SOUND);
-      Wire.send((int)(13));         // read register 13-14-15
+      Wire.send((int)(0));
       Wire.endTransmission();
-      Wire.requestFrom(I2C_SOUND,3); // read 3 byte variables
+      Wire.requestFrom(I2C_SOUND,12); // read 3 "long" variables = 12 bytes
       int c = 0;
-      for ( c = 0; c < 3; c++ ) 
+      // data on PSoC registers are Big Endian, AVR works in Little Endian
+      for ( c = 11; c >= 0; c-- ) 
       {
         if (Wire.available()) 
         {
