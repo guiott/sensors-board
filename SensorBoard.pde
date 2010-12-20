@@ -90,19 +90,24 @@ int CmpBearing0; 		 // orientetion at startup, got as a reference
 Metro BlinkCycle = Metro(BLINK_OFF,1);  // LED blink cycle
 Metro SensorCycle = Metro(14,1);        // Sensor reading cycle [2]
 Metro SwitchCycle = Metro(100,1);       // Push button cycle
+Metro SoundFollowerCycle = Metro(1000,1);  // cycle for the sound follower test program
 
 byte SendFlag= LOW;            // to enable data sending
 int TimeElapsed = millis();
 
 #ifdef SOUND_DB
   struct I2C_Sound_Struct {   // I2C interface structure  
-      byte I2C_SoundValue[3];    
+      byte I2C_SoundValue[3]; // single measure
+      int SumValue  [3];  // cumulate values to compute average
   } I2C_Regs;
 #else
    struct I2C_Sound_Struct {   // I2C interface structure  
-      long I2C_SoundValue[3];    
+      long I2C_SoundValue[3];  // single measure
+      long SumValue  [3];  // cumulate values to compute average
   } I2C_Regs; 
 #endif
+
+byte SoundCount=0; // to compute the average sound value
 
 //-----------------------------------------------------------------------------      
 
@@ -138,5 +143,6 @@ void loop()
   if (BlinkCycle.check() == 1) {HeartBeat();}  // Led blink
   if (SensorCycle.check() == 1) {SensorRead();}   // Sensor reading
   if (SwitchCycle.check() == 1) {Switch();}   // Push button
+  if (SoundFollowerCycle.check() == 1) {SoundFollower();}   // demo procedure for sound sensors
 }
 
