@@ -90,7 +90,7 @@ int CmpBearing0; 		 // orientetion at startup, got as a reference
 Metro BlinkCycle = Metro(BLINK_OFF,1);  // LED blink cycle
 Metro SensorCycle = Metro(14,1);        // Sensor reading cycle [2]
 Metro SwitchCycle = Metro(100,1);       // Push button cycle
-Metro SoundFollowerCycle = Metro(1000,1);  // cycle for the sound follower test program
+Metro SoundAverageCycle = Metro(1000,1);  // cycle for the sound follower test program
 
 byte SendFlag= LOW;            // to enable data sending
 int TimeElapsed = millis();
@@ -143,6 +143,6 @@ void loop()
   if (BlinkCycle.check() == 1) {HeartBeat();}  // Led blink
   if (SensorCycle.check() == 1) {SensorRead();}   // Sensor reading
   if (SwitchCycle.check() == 1) {Switch();}   // Push button
-  if (SoundFollowerCycle.check() == 1) {SoundFollower();}   // demo procedure for sound sensors
+  if (SoundAverageCycle.check() == 1) {SoundAverage();}   // demo procedure for sound sensors
 }
 
