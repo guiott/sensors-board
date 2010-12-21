@@ -48,9 +48,9 @@
  }
  
 //-----------------------------------------------------------------------------  
-void SoundFollower(void)
+void SoundAverage(void)
 {
-  // rotate the robot toward the strongest sound 
+  // compute a mean value of the sound level averaging some measurements 
   int c = 0;
   
   #ifdef SOUND_DB   
@@ -65,9 +65,43 @@ void SoundFollower(void)
   }
   SoundCount=0; // reset count
 
-/* to do
-determina se livello maggiore di soglia e da quale sensore proviene
-chiama procedura SendRelTurn() con 10 gradi
-*/
+ #ifdef SOUND_DB   
+    SoundFollower((int *) &Snd); // a little demo to show the sound sensors capabilities
+ #else
+    SoundFollower((long *) &Snd); // 
+ #endif
+}
 
+//-----------------------------------------------------------------------------  
+  #ifdef SOUND_DB   
+    void SoundFollower(int *Snd)
+    {
+  #else
+    void SoundFollower(long *Snd)
+    {
+  #endif
+    // rotate the robot toward the strongest sound 
+    
+  #define L 0
+  #define C 1
+  #define R 2
+  #define MIN 10  // sound level threshold in dB
+  
+  if ((Snd[L] > MIN) || (Snd[R] > MIN))
+  {
+    if (Snd[L] > Snd[R])
+    {
+      if (Snd[L] > Snd[C])
+      {
+        SendRelTurn(-10)
+      }
+    }
+    else
+    {
+      if (Snd[R] > Snd[C])
+      {
+        SendRelTurn(10)
+      }
+    }
+  }
 }
