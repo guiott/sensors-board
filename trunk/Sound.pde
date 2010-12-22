@@ -63,13 +63,18 @@ void SoundAverage(void)
   {
     Snd[c]=I2C_Regs.SumValue[c] / SoundCount; // compute average value
   }
-  SoundCount=0; // reset count
 
  #ifdef SOUND_DB   
     SoundFollower((int *) &Snd); // a little demo to show the sound sensors capabilities
  #else
     SoundFollower((long *) &Snd); // 
  #endif
+ 
+  for ( c = 0; c < 3; c++ )
+  {
+    I2C_Regs.SumValue[c]=0; // reset average value
+  }
+  SoundCount=0; // reset count
 }
 
 //-----------------------------------------------------------------------------  
@@ -93,14 +98,14 @@ void SoundAverage(void)
     {
       if (Snd[L] > Snd[C])
       {
-        SendRelTurn(-10)
+        SendRelTurn(-30);
       }
     }
     else
     {
       if (Snd[R] > Snd[C])
       {
-        SendRelTurn(10)
+        SendRelTurn(30);
       }
     }
   }
