@@ -309,7 +309,7 @@ void SendTurn(int Angle)
   byte ChkSum = 146; // "@" + 0 + "O" + 3
   Serial.print("@");  // Header
   Serial.print(0, BYTE);    // broadcast
-  Serial.print("O");  // command = "O' turn absolute degrees
+  Serial.print("O");  // command = 'O' turn absolute degrees
   Serial.print(3, BYTE);    // command length
   TxDataByte = (byte) (Angle >> 8);
   Serial.print(TxDataByte, BYTE);    // byte high
@@ -324,7 +324,7 @@ void SendTurn(int Angle)
 void SendRelTurn(int Angle)
 {// send command to turn a relative angle starting from the current position 
   byte (TxDataByte);
-  byte ChkSum = 146; // "@" + 0 + "o" + 3
+  byte ChkSum = 178; // "@" + 0 + 'o' + 3
   Serial.print("@");  // Header
   Serial.print(0, BYTE);    // broadcast
   Serial.print("o");  // command = "o' turn relative degrees
