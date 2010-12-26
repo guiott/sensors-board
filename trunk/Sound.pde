@@ -89,40 +89,44 @@ void SoundAverage(void)
   #endif
     // rotate the robot toward the strongest sound 
     
-  #define L 0
-  #define C 1
-  #define R 2
   #define MIN 10  // sound level threshold in dB
   #define VEL 50
-  
-  if ((Snd[L] > MIN) || (Snd[R] > MIN))
+
+  if ((Dist[C] > 20) && (Dist[L] > 20) && (Dist[R] > 20)) // far from objects
   {
-    if (Snd[L] > Snd[R])
+    if ((Snd[L] > MIN) || (Snd[R] > MIN))
     {
-      if (Snd[L] > Snd[C])
+      if (Snd[L] > Snd[R])
       {
-        SendRelTurn(-30);
+        if (Snd[L] > Snd[C])
+        {
+          SendRelTurn(-30);
+        }
+        else
+        {
+          Walk(VEL, Snd[C]);
+        }
       }
       else
       {
-        Walk(VEL, Snd[C]);
+        if (Snd[R] > Snd[C])
+        {
+          SendRelTurn(30);
+        }
+        else
+        {
+          Walk(VEL, Snd[C]);
+        }
       }
     }
     else
     {
-      if (Snd[R] > Snd[C])
-      {
-        SendRelTurn(30);
-      }
-      else
-      {
-        Walk(VEL, Snd[C]);
-      }
+      Walk(VEL, Snd[C]);
     }
   }
   else
   {
-    Walk(VEL, Snd[C]);
+    SendHalt();
   }
 }
 
@@ -132,14 +136,7 @@ void Walk(int Speed, int SndC)
   // walk forward to the sound
   if (SndC > MIN)
   {
-    if (Dist[C] > 20) // close to the object
-    {
-      SendSpeed(Speed); // walk at Speed mm/s
-    }
-    else
-    {
-      SendHalt();
-    }
+    SendSpeed(Speed); // walk at Speed mm/s
   }
   else
   {
