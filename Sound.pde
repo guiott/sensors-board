@@ -64,11 +64,13 @@ void SoundAverage(void)
     Snd[c]=I2C_Regs.SumValue[c] / SoundCount; // compute average value
   }
 
+#ifdef SOUND_FOLLOWER// a little demo to show the sound sensors capabilities
  #ifdef SOUND_DB   
-    SoundFollower((int *) &Snd); // a little demo to show the sound sensors capabilities
+    SoundFollower((int *) &Snd);
  #else
-    SoundFollower((long *) &Snd); // 
+    SoundFollower((long *) &Snd); 
  #endif
+#endif
  
   for ( c = 0; c < 3; c++ )
   {
@@ -91,6 +93,7 @@ void SoundAverage(void)
   #define C 1
   #define R 2
   #define MIN 10  // sound level threshold in dB
+  #define VEL 50
   
   if ((Snd[L] > MIN) || (Snd[R] > MIN))
   {
@@ -100,6 +103,10 @@ void SoundAverage(void)
       {
         SendRelTurn(-30);
       }
+      else
+      {
+        Walk(VEL, Snd[C]);
+      }
     }
     else
     {
@@ -107,6 +114,35 @@ void SoundAverage(void)
       {
         SendRelTurn(30);
       }
+      else
+      {
+        Walk(VEL, Snd[C]);
+      }
     }
+  }
+  else
+  {
+    Walk(VEL, Snd[C]);
+  }
+}
+
+//-----------------------------------------------------------------------------  
+void Walk(int Speed, int SndC)
+{
+  // walk forward to the sound
+  if (SndC > MIN)
+  {
+    if (Dist[C] > 20) // close to the object
+    {
+      SendSpeed(Speed); // walk at Speed mm/s
+    }
+    else
+    {
+      SendHalt();
+    }
+  }
+  else
+  {
+    SendHalt();
   }
 }

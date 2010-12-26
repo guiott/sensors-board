@@ -33,7 +33,7 @@ guido@guiott.com
 // Compiler options
 // #define DEBUG_MODE // If defined the serial output is in ASCII for debug
 #define SOUND_DB   // if defined the values from Sound Board are in dB
-
+#define SOUND_FOLLOWER // if defined a demo program to follow sound starts
 
 #include <Wire.h>
 #include <Metro.h>
