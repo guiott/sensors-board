@@ -302,7 +302,7 @@ void I2cReqDist(int addr, int SensNum, byte Tip)
   if (Tip == 0)
   { 
     Wire.requestFrom(addr, 3);
-    if(1 <= Wire.available())   // if three bytes were received
+    if(3 <= Wire.available())   // if three bytes were received
     {
       Light[SensNum] = Wire.receive(); // first one is the light measure
       TempH = Wire.receive();// receive high byte
