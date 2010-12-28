@@ -8,9 +8,9 @@
       Wire.send((int)(13));         // read register 13-14-15
       Wire.endTransmission();
       Wire.requestFrom(I2C_SOUND,3); // read 3 "byte" variables
-      for ( c = 0; c < 3; c++ ) 
+      if (3 <= Wire.available()) 
       {
-        if (Wire.available()) 
+        for ( c = 0; c < 3; c++ ) 
         {
           buffer[c] = Wire.receive();
         }
@@ -21,9 +21,9 @@
       Wire.endTransmission();
       Wire.requestFrom(I2C_SOUND,12); // read 3 "long" variables = 12 bytes
       // data on PSoC registers are Big Endian, AVR works in Little Endian
-      for ( c = 11; c >= 0; c-- ) 
+      if (12 <= Wire.available()) 
       {
-        if (Wire.available()) 
+        for ( c = 11; c >= 0; c-- ) 
         {
           buffer[c] = Wire.receive();
         }
@@ -72,6 +72,18 @@ void SoundAverage(void)
  #endif
 #endif
  
+ /* Just for debugging purposes
+  Serial.print("L:");
+  Serial.print(Snd[L]);
+  Serial.print(" ");
+  Serial.print("-C:");
+  Serial.print(Snd[C]);
+  Serial.print(" ");
+  Serial.print("-R:");
+  Serial.print(Snd[R]);
+  Serial.println("");
+ */
+  
   for ( c = 0; c < 3; c++ )
   {
     I2C_Regs.SumValue[c]=0; // reset average value
