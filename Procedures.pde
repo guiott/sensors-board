@@ -324,26 +324,33 @@ void DataPrint(void)
   byte TxBuff[16];
   byte ChkSum=0;
   
-  TxBuff[0] = 64;  // Header = "@"
-  TxBuff[1] = 0;   // broadcast
-  TxBuff[2] = 100; // command = "d"
-  TxBuff[3] = 9;   // command length
-  TxBuff[4] = Dist[L];
-  TxBuff[5] = Dist[C];
-  TxBuff[6] = Dist[R];
-  TxBuff[7] = Target(L);
-  TxBuff[8] = Target(C);
-  TxBuff[9] = Target(R);
-  TxBuff[10]= (byte)(CmpBearing >> 8);
-  TxBuff[11]= (byte)(CmpBearing);
-  
-  for (i=0; i<=11; i++)
+  if (BattAlarm == 2)
   {
-    ChkSum += TxBuff[i];
-    Serial.print(TxBuff[i], BYTE);
+    TxBuff[0] = 64;  // Header = "@"
+    TxBuff[1] = 0;   // broadcast
+    TxBuff[2] = 100; // command = "d"
+    TxBuff[3] = 9;   // command length
+    TxBuff[4] = Dist[L];
+    TxBuff[5] = Dist[C];
+    TxBuff[6] = Dist[R];
+    TxBuff[7] = Target(L);
+    TxBuff[8] = Target(C);
+    TxBuff[9] = Target(R);
+    TxBuff[10]= (byte)(CmpBearing >> 8);
+    TxBuff[11]= (byte)(CmpBearing);
+    
+    for (i=0; i<=11; i++)
+    {
+      ChkSum += TxBuff[i];
+      Serial.print(TxBuff[i], BYTE);
+    }
+    
+    Serial.print(ChkSum);
   }
-  
-  Serial.print(ChkSum);
+  else
+  {
+    SendHalt(); // if battery too low stop the motors
+  }
 }
 #endif
 
