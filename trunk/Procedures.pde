@@ -324,7 +324,7 @@ void DataPrint(void)
   byte TxBuff[16];
   byte ChkSum=0;
   
-  if (BattAlarm == 2)
+  if (BattAlarm != 2)
   {
     TxBuff[0] = 64;  // Header = "@"
     TxBuff[1] = 0;   // broadcast
