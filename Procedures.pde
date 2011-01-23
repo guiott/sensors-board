@@ -29,28 +29,72 @@ void Switch (void)
 
 //-----------------------------------------------------------------------------      
 void HeartBeat (void)
-{ // regular blink as heart beat signal
-  if (LedStat == LOW)
+{
+  // blink at different frequencies to display the battery status
+  int BlinkOff;
+  if (BlinkRemain <= 0)
   {
-    LedStat = HIGH;
-    BlinkCycle.interval(BLINK_ON);  // change to ON period
-    digitalWrite(Buzzer,LOW);
+    BlinkRemain = BlinkCount;
+    BlinkOff=BLINK_ON*(BLINK_MAX-BlinkCount-1);
+    if (BlinkOff <=0) BlinkOff = 1;
+    BlinkCycle.interval(BlinkOff);  //  change to OFF period
+    LedStat = LOW;
   }
   else
   {
-    LedStat = LOW;
-    if (Vbatt < VBATT_THRESHOLD) 
-    {// if battery low blink faster [5]
-      BlinkCycle.interval(BLINK_ALRT);
-      digitalWrite(Buzzer,HIGH);
+    BlinkCycle.interval(BLINK_ON);  // change to ON period
+    if (LedStat == LOW)
+    {
+      LedStat = HIGH;
+      if (BattAlarm>0) 
+      {
+        digitalWrite(Buzzer,HIGH);
+      }
+      else
+      {
+        digitalWrite(Buzzer,LOW);
+      }
     }
     else
     {
-      BlinkCycle.interval(BLINK_OFF);  // change to OFF period
+      LedStat = LOW;
+      BlinkRemain --;
+      if (BattAlarm>0 && BattAlarm <2) digitalWrite(Buzzer,LOW);
     }
   }
-  
   digitalWrite(Led2,LedStat);
+}
+
+//-----------------------------------------------------------------------------      
+void BatteryLevel (void)
+{
+  BattAlarm = 0;
+  if (Vbatt >= 160)
+  {
+    BlinkCount = 1;    // full charge
+  }
+  else if (Vbatt < 160 && Vbatt >= 150)
+  {
+    BlinkCount = 2;    // 75% charge
+  }
+  else if (Vbatt < 150 && Vbatt >= 145)
+  {
+    BlinkCount = 3;    // 50% charge
+  }
+  else if (Vbatt < 145 && Vbatt >= 135)
+  {
+    BlinkCount = 4;    // 25% charge
+  }
+  else if (Vbatt < 135 && Vbatt >= 130)
+  {
+    BlinkCount = 5;    // alarm
+    BattAlarm = 1;
+  }
+  else if (Vbatt < 130)
+  {
+    BlinkCount = 6;    // cutoff
+    BattAlarm = 2;
+  }
 }
 
 //-----------------------------------------------------------------------------      
@@ -158,7 +202,18 @@ void SensorRead()
     break;
     
   case 7:
-    Vbatt = I2cReqV(I2C_DAC);  // Vbatt read  on DAC CH4
+    if (VbattCount < 15)
+    {
+      VbattSum += I2cReqV(I2C_DAC);  // Vbatt read  on DAC CH4
+      VbattCount ++;
+    }
+    else
+    {
+      Vbatt = (VbattSum >> 4) + 1;  // average dividing by 16
+      VbattSum = I2cReqV(I2C_DAC);  // Vbatt read  on DAC CH4
+      VbattCount = 0;
+      BatteryLevel();
+    }
  
     // Right US read ----
     Wire.beginTransmission(I2C_US_R); 

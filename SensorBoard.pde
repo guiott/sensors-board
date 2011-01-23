@@ -1,7 +1,7 @@
 /* ////////////////////////////////////////////////////////////////////////////
 ** File:      SensorBoard.pde
 */                                  
- unsigned char  Ver[] = "SensorBoard 1.3.5 Guiott 12-10"; // 30+1 char
+ unsigned char  Ver[] = "SensorBoard 1.3.5 Guiott 01-11"; // 30+1 char
 /* Author:    Guido Ottaviani-->guido@guiott.com<--
 ** Description: This SW drives the Arduino board on reading some sensors in 
 **		order to know the external environment and to instruct dsNavCon 
@@ -47,7 +47,7 @@ byte Sw = 7;                     // Switch
 byte Bump[3];                    // Bumpers
 
 #define BLINK_ON 200             // HeartBeat Blink On time
-#define BLINK_OFF 800            // HeartBeat Blink Off time
+#define BLINK_MAX 6              
 #define BLINK_ALRT 100           // HeartBeat Blink Alert time
 
 int LedStat = LOW;
@@ -80,14 +80,16 @@ byte Gas[] = {0, 0, 0};          // Gas values array
 byte Sound[] = {0, 0, 0};        // To be implemented
 int SensDist[3][2] = {200,200,200,200,200,200};// Distance matrix: position x type of sensor
 byte Dist[3] = {250, 250, 250};  // Current distance from object
-byte Vbatt;
-#define VBATT_THRESHOLD 102      // Battery alert when Vbatt < 11V
+byte Vbatt;                      // Current battery voltage
+int VbattSum = 0;                // to average Vbatt
+byte VbattCount = 0;
+#define VBATT_THRESHOLD 108      // Battery alert when Vbatt < 11V for NiMh battery
 int CmpBearing;	                 // Compass reading
 int CmpBearing0; 		 // orientetion at startup, got as a reference		
 #define BOT_RADIUS  10 // cm to add to sensors measures to obtain distance from center of the bot
 #define MIN_DIST BOT_RADIUS + 5  // alert distance from obstacle
 
-Metro BlinkCycle = Metro(BLINK_OFF,1);  // LED blink cycle
+Metro BlinkCycle = Metro(BLINK_ON,1);  // LED blink cycle
 Metro SensorCycle = Metro(14,1);        // Sensor reading cycle [2]
 Metro SwitchCycle = Metro(100,1);       // Push button cycle
 Metro SoundAverageCycle = Metro(1000,1);  // cycle for the sound follower test program
@@ -107,7 +109,10 @@ int TimeElapsed = millis();
   } I2C_Regs; 
 #endif
 
-byte SoundCount=0; // to compute the average sound value
+byte SoundCount=0;  // to compute the average sound value
+byte BlinkCount=1;  // variable blinking frequencies
+byte BlinkRemain=0;
+byte BattAlarm = 0; // battery to low
 
 //-----------------------------------------------------------------------------      
 
